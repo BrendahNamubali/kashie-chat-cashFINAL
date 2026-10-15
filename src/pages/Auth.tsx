@@ -167,8 +167,9 @@ const Auth = () => {
           </p>
           <p className="text-sm font-medium text-foreground mb-6">{email}</p>
           <p className="text-xs text-muted-foreground mb-6">
-            Click the link in the email to activate your account, then come back
-            here to sign in. Check your spam folder if you don't see it.
+            If you're creating a new account, check your inbox and spam folder
+            for a confirmation link. If you already have an account, go back
+            to sign in instead.
           </p>
           <div className="flex flex-col gap-3">
             <button
