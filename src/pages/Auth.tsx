@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import KashieLogo from "@/components/KashieLogo";
@@ -116,24 +115,21 @@ const Auth = () => {
   };
 
   const handleGoogle = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: `${window.location.origin}/`,
-      });
-      if (result.error) {
-        toast.error("Google sign-in failed. Try again.");
-        setLoading(false);
-        return;
-      }
-      if (result.redirected) return;
-      navigate("/home", { replace: true });
-    } catch {
-      toast.error("Google sign-in failed. Try again.");
-      setLoading(false);
-    }
-  };
+  if (loading) return;
+  setLoading(true);
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/`,
+    },
+  });
+
+  if (error) {
+    toast.error(error.message || "Google sign-in failed. Try again.");
+    setLoading(false);
+  }
+};
 
   const handleResendConfirmation = async () => {
     const emailParse = emailSchema.safeParse(email);
