@@ -42,7 +42,7 @@ export default function Landing() {
               </div>
             ))}
           </div>
-          <p className="mt-10 border-t border-border pt-5 text-sm text-muted-foreground">After the 7-day trial, plans start at UGX 20,000/month.</p>
+          <p className="mt-10 border-t border-border pt-5 text-sm text-muted-foreground">After the 7-day trial, plans start at UGX 40,000/month.</p>
         </section>
       </main>
     </div>
