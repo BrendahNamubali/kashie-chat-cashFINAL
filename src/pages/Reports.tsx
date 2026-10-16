@@ -49,6 +49,11 @@ const Reports = () => {
   const [entries, setEntries] = useState<DailyEntry[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const invalidDateRange = Boolean(
+  startDate && endDate && startDate > endDate
+);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +66,7 @@ const Reports = () => {
 
   const handleExport = async (kind: Kind, title: string) => {
     try {
-      await exportReportPdf({ kind, entries, inventory, profile }, `Kashie-${title.replace(/\s+/g, "-")}-${Date.now()}.pdf`);
+      await exportReportPdf({ kind, entries, inventory, profile, startDate, endDate }, `Kashie-${title.replace(/\s+/g, "-")}-${Date.now()}.pdf`);
       toast.success("Report downloaded");
     } catch (e) {
       console.error(e);
@@ -71,7 +76,7 @@ const Reports = () => {
 
   const handlePrint = async (kind: Kind) => {
     try {
-      await printReportPdf({ kind, entries, inventory, profile });
+      await printReportPdf({ kind, entries, inventory, profile, startDate, endDate });
     } catch (e) {
       console.error(e);
       toast.error("Couldn't open print view");
@@ -87,6 +92,59 @@ const Reports = () => {
           <p className="text-sm text-muted-foreground mt-1">
             Generated from your live business data. Export or print anytime.
           </p>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+          <div>
+            <h2 className="font-semibold text-foreground">Reporting period</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Choose dates for your Profit & Loss and Expense Breakdown PDFs.
+              Leave both blank to include all recorded dates.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label htmlFor="report-start-date" className="text-sm font-medium">
+                From
+              </label>
+              <input
+                id="report-start-date"
+                type="date"
+                value={startDate}
+                max={endDate || undefined}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="report-end-date" className="text-sm font-medium">
+                To
+              </label>
+              <input
+                id="report-end-date"
+                type="date"
+                value={endDate}
+                min={startDate || undefined}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setStartDate("");
+              setEndDate("");
+            }}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            {invalidDateRange && (
+              <p className="text-sm text-destructive" role="alert">
+                The start date must be on or before the end date.
+              </p>
+            )}
+            Clear dates
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -106,6 +164,7 @@ const Reports = () => {
               </div>
               <div className="flex items-center gap-2">
                 <button
+                  disabled={invalidDateRange}
                   onClick={() => handleExport(r.kind, r.title)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
                 >
@@ -113,6 +172,7 @@ const Reports = () => {
                   Export PDF
                 </button>
                 <button
+                  disabled={invalidDateRange}
                   onClick={() => handlePrint(r.kind)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-border text-foreground/80 text-xs font-medium hover:bg-accent transition-colors"
                 >
