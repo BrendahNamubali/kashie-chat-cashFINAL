@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { House, LayoutDashboard, MessageSquare, FileText, LogOut, Play, Settings, Landmark, Building2, CalendarClock, CreditCard, MoreHorizontal } from "lucide-react";
+import { House, LayoutDashboard, MessageSquare, FileText, LogOut, Settings, Landmark, Building2, CalendarClock, CreditCard, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -20,8 +20,6 @@ const navItems = [
   { to: "/forecast", label: "Forecast", icon: CalendarClock },
   { to: "/financing", label: "Financing", icon: Landmark },
   { to: "/subscription", label: "Subscription", icon: CreditCard },
-  { to: "/pricing", label: "Pricing", icon: CreditCard },
-  { to: "/demo-center", label: "Demo", icon: Play },
   { to: "/business-profile", label: "Business Profile", icon: Building2 },
 ];
 

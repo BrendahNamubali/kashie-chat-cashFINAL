@@ -1,9 +1,16 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { CreditCard, ArrowRight, ShieldCheck } from "lucide-react";
+import { CreditCard, ArrowRight, ShieldCheck, Check } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
+
+const features = [
+  "Daily sales and expense tracking",
+  "Ask Kashie about your business",
+  "Stock tracking and business reports",
+  "Tax preparation and draft PDFs",
+  "Forecast and financing planning",
+];
 
 export default function Subscription() {
   const [fullName, setFullName] = useState("");
@@ -25,21 +32,46 @@ export default function Subscription() {
           <CreditCard className="size-5 text-primary mb-3" />
           <h1 className="text-3xl font-semibold">Your subscription</h1>
           <p className="text-muted-foreground mt-2">
-            Set up your business details before checkout.
+            A little clarity for the business you built.
           </p>
         </header>
 
-        <section className="rounded-xl border border-border bg-card p-6 space-y-3">
+        <section className="rounded-xl border border-border bg-card p-6 space-y-4">
           <p className="text-sm text-muted-foreground">Kashie Business</p>
+
           <p>
             <span className="text-3xl font-semibold">UGX 40,000</span>
             <span className="text-sm text-muted-foreground"> / month</span>
           </p>
-          <p className="text-sm font-medium">Advertised offer: 7-day free trial</p>
-          <p className="text-sm text-muted-foreground">
-            Before any payment, the checkout must confirm when your trial begins,
-            when charges start, and how recurring billing works.
+
+          <p className="text-sm font-medium">
+            Advertised offer: 7-day free trial
           </p>
+
+          <div className="space-y-3 pt-2">
+            <h2 className="font-semibold">What’s included</h2>
+            <ul className="space-y-3">
+              {features.map((feature) => (
+                <li key={feature} className="flex items-start gap-3 text-sm">
+                  <Check className="size-4 shrink-0 text-primary mt-0.5" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border-t border-border pt-4 space-y-2">
+            <h2 className="font-semibold">Clear before you commit</h2>
+            <p className="text-sm text-muted-foreground">
+              Online subscription checkout is not connected yet. This page
+              does not charge you or activate a paid plan or free trial.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Before paid subscriptions become available, you’ll be shown
+              the confirmed plan details, final charges, when your trial
+              begins and ends, and how recurring billing works.
+            </p>
+          </div>
         </section>
 
         {submitted ? (
@@ -59,7 +91,12 @@ export default function Subscription() {
           </section>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            <h2 className="text-lg font-semibold">Your details</h2>
+            <div className="space-y-1">
+              <h2 className="text-lg font-semibold">Your details</h2>
+              <p className="text-sm text-muted-foreground">
+                Set up your business details before checkout.
+              </p>
+            </div>
 
             <div className="space-y-2">
               <label htmlFor="fullName" className="text-sm font-medium">
@@ -124,7 +161,9 @@ export default function Subscription() {
             </div>
 
             <fieldset className="space-y-3">
-              <legend className="text-sm font-medium">Preferred payment method</legend>
+              <legend className="text-sm font-medium">
+                Preferred payment method
+              </legend>
 
               <label className="flex items-center gap-3 rounded-md border border-border p-3">
                 <input
@@ -171,9 +210,6 @@ export default function Subscription() {
           <p className="text-sm text-muted-foreground">
             This form does not change your account access or saved business data.
           </p>
-          <Button asChild variant="outline">
-            <Link to="/pricing">Back to pricing</Link>
-          </Button>
         </section>
       </div>
     </AppLayout>
