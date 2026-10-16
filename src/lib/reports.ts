@@ -3,12 +3,13 @@ import { formatMoney } from "@/lib/currency";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import type { DailyEntry, InventoryItem, Profile } from "@/lib/finance";
+import fullLogo from "@/assets/kashie-logo.png";
+import iconLogo from "@/assets/kashie-icon.png";
 import {
   computeHealthScore,
   computeAlerts,
   buildExpenseBreakdown,
 } from "@/lib/insights";
-import fullLogo from "@/assets/kashie-full.png.asset.json";
 
 type ReportKind = "pnl" | "expenses" | "inventory" | "health";
 
@@ -68,14 +69,13 @@ function header(
 ) {
   doc.setFillColor(91, 97, 64);
   doc.rect(0, 0, doc.internal.pageSize.getWidth(), 60, "F");
+  doc.addImage(logo, "PNG", 40, 5, 64, (64 * 768) / 1374);
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.addImage(logo, "PNG", 40, 3, 64, (64 * 768) / 1374);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.text("AI CFO Report", 40, 46);
-
   doc.setFontSize(11);
   const rightX = doc.internal.pageSize.getWidth() - 40;
   doc.text(profile?.business_name ?? "Your business", rightX, 30, {
@@ -114,10 +114,12 @@ export async function buildReportPdf({
   startDate,
   endDate,
 }: BuildArgs): Promise<jsPDF> {
-  const response = await fetch(fullLogo.url);
-  if (!response.ok) throw new Error("Couldn't load the report logo");
-  const logo = new Uint8Array(await response.arrayBuffer());
-  const doc = new jsPDF({ unit: "pt", format: "a4" });
+const response = await fetch(fullLogo);
+if (!response.ok) {
+  throw new Error("Could not load the Kashie logo for the report.");
+}
+const logo = new Uint8Array(await response.arrayBuffer());
+const doc = new jsPDF({ unit: "pt", format: "a4" });
 
   const selectedEntries =
     kind === "pnl" || kind === "expenses"
